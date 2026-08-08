@@ -240,14 +240,8 @@
   .mushaf-frame .corner-tr{top:-8px; left:-8px;}
   .mushaf-frame .corner-bl{bottom:-8px; right:-8px;}
   .mushaf-frame .corner-br{bottom:-8px; left:-8px;}
-  .quran-surah-title{
-    font-family:'Amiri', serif; text-align:center; color:var(--gold-soft);
-    font-size:24px; margin:0 0 18px; padding:10px 14px;
-    border:1px solid var(--gold); border-radius:8px;
-    background:linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.15), rgba(201,162,39,0.05));
-  }
   .quran-verses{
-    font-family:'Amiri', serif; font-size:21px; line-height:2.4; text-align:justify; text-align-last:right; color:var(--cream);
+    font-family:'Amiri', serif; font-size:21px; line-height:2.05; text-align:justify; text-align-last:right; color:var(--cream);
     touch-action:pan-y;
   }
   .quran-verses .ayah-num{
@@ -355,7 +349,6 @@
         <button class="btn quran-back-btn" onclick="showSurahList()">→ كل السور</button>
         <div class="mushaf-frame">
           <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
-          <h2 id="quran-surah-title" class="quran-surah-title"></h2>
           <div id="quran-verses" class="quran-verses"></div>
         </div>
         <div class="page-nav">
@@ -708,7 +701,6 @@ function switchToReaderView(){
 async function openSurah(number){
   switchToReaderView();
   const versesEl = document.getElementById('quran-verses');
-  document.getElementById('quran-surah-title').textContent = '';
   document.getElementById('quran-page-indicator').textContent = '';
   versesEl.innerHTML = '<div class="spinner"></div>';
   try{
@@ -740,16 +732,19 @@ function renderPage(pageData){
   let html = '';
   let lastSurah = null;
   let firstSurahName = null;
+  let isFirst = true;
   pageData.ayahs.forEach(a=>{
     if(a.surah.name !== lastSurah){
-      html += `<div class="page-surah-divider">سورة ${a.surah.name.replace('سورة ','')}</div>`;
+      if(!isFirst){
+        html += `<div class="page-surah-divider">سورة ${a.surah.name.replace('سورة ','')}</div>`;
+      }
       lastSurah = a.surah.name;
       if(!firstSurahName) firstSurahName = a.surah.name;
+      isFirst = false;
     }
     html += `${a.text} <span class="ayah-num">﴿${toArabicDigits(a.numberInSurah)}﴾</span> `;
   });
   versesEl.innerHTML = html;
-  document.getElementById('quran-surah-title').textContent = firstSurahName ? ('سورة ' + firstSurahName.replace('سورة ','')) : '';
   document.getElementById('quran-page-indicator').textContent = `الصفحة ${toArabicDigits(currentPage)} من ${toArabicDigits(TOTAL_PAGES)}`;
   safeSet('quran-last-read', {page: currentPage, surahName: firstSurahName});
   window.scrollTo(0,0);
