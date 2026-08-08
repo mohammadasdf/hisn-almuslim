@@ -223,22 +223,47 @@
   .surah-item .info .name{font-family:'Amiri', serif; font-size:19px; color:var(--gold-soft); font-weight:700;}
   .surah-item .info .meta{font-size:11.5px; color:var(--muted); margin-top:2px;}
   .quran-back-btn{margin-bottom:12px;}
+  .mushaf-frame{
+    position:relative;
+    background:linear-gradient(170deg, #16332f, #0e2621);
+    border:2px solid var(--gold);
+    border-radius:4px;
+    padding:22px 16px 18px;
+    box-shadow:var(--shadow), inset 0 0 0 5px rgba(11,30,28,0.9), inset 0 0 0 6px rgba(201,162,39,0.35);
+  }
+  .mushaf-frame::before, .mushaf-frame::after,
+  .mushaf-frame .corner-tl, .mushaf-frame .corner-tr, .mushaf-frame .corner-bl, .mushaf-frame .corner-br{
+    content:''; position:absolute; width:14px; height:14px;
+    border:2px solid var(--gold); transform:rotate(45deg);
+  }
+  .mushaf-frame .corner-tl{top:-8px; right:-8px;}
+  .mushaf-frame .corner-tr{top:-8px; left:-8px;}
+  .mushaf-frame .corner-bl{bottom:-8px; right:-8px;}
+  .mushaf-frame .corner-br{bottom:-8px; left:-8px;}
   .quran-surah-title{
     font-family:'Amiri', serif; text-align:center; color:var(--gold-soft);
-    font-size:26px; margin:6px 0 18px; padding-bottom:14px; border-bottom:1px solid var(--line);
+    font-size:24px; margin:0 0 18px; padding:10px 14px;
+    border:1px solid var(--gold); border-radius:8px;
+    background:linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.15), rgba(201,162,39,0.05));
   }
   .quran-verses{
-    font-family:'Amiri', serif; font-size:21px; line-height:2.3; text-align:right; color:var(--cream);
+    font-family:'Amiri', serif; font-size:21px; line-height:2.4; text-align:justify; text-align-last:right; color:var(--cream);
+    touch-action:pan-y;
   }
   .quran-verses .ayah-num{
-    color:var(--gold-soft); font-size:15px; font-family:'Tajawal'; margin:0 3px;
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; margin:0 3px; vertical-align:middle;
+    border:1.5px solid var(--gold); border-radius:50%;
+    color:var(--gold-soft); font-size:12px; font-family:'Tajawal'; font-weight:700;
   }
   .page-surah-divider{
-    font-family:'Amiri', serif; font-size:20px; color:var(--gold-soft);
-    text-align:center; margin:18px 0 10px; padding:8px 0;
-    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    font-family:'Amiri', serif; font-size:19px; color:var(--gold-soft);
+    text-align:center; margin:18px 0 10px; padding:8px 14px;
+    border:1px solid var(--gold); border-radius:8px;
+    background:linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.15), rgba(201,162,39,0.05));
   }
   .page-surah-divider:first-child{margin-top:0;}
+  .swipe-hint{text-align:center; font-size:11px; color:var(--muted); margin-top:10px;}
   .page-nav{
     display:flex; align-items:center; justify-content:space-between;
     margin-top:22px; padding-top:16px; border-top:1px solid var(--line);
@@ -328,14 +353,19 @@
       </div>
       <div id="quran-reader-view" style="display:none;">
         <button class="btn quran-back-btn" onclick="showSurahList()">→ كل السور</button>
-        <h2 id="quran-surah-title" class="quran-surah-title"></h2>
-        <div id="quran-verses" class="quran-verses"></div>
-        <div class="page-nav">
-          <button class="btn" onclick="nextPage()">الصفحة التالية</button>
-          <span id="quran-page-indicator" class="page-indicator"></span>
-          <button class="btn" onclick="prevPage()">الصفحة السابقة</button>
+        <div class="mushaf-frame">
+          <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
+          <h2 id="quran-surah-title" class="quran-surah-title"></h2>
+          <div id="quran-verses" class="quran-verses"></div>
         </div>
+        <div class="page-nav">
+          <button class="btn" onclick="nextPage()">← التالية</button>
+          <span id="quran-page-indicator" class="page-indicator"></span>
+          <button class="btn" onclick="prevPage()">السابقة →</button>
+        </div>
+        <div class="swipe-hint">مرّر يمينًا أو يسارًا لتقليب الصفحة</div>
       </div>
+
     </section>
 
     <!-- DUAS -->
@@ -727,6 +757,25 @@ function renderPage(pageData){
 
 function nextPage(){ if(currentPage && currentPage < TOTAL_PAGES) openPage(currentPage + 1); }
 function prevPage(){ if(currentPage && currentPage > 1) openPage(currentPage - 1); }
+
+/* Swipe to flip pages (RTL: swipe left = next page, swipe right = previous page) */
+(function(){
+  const zone = document.getElementById('quran-reader-view');
+  let startX = 0, startY = 0, tracking = false;
+  zone.addEventListener('touchstart', (e)=>{
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, {passive:true});
+  zone.addEventListener('touchend', (e)=>{
+    if(!tracking) return;
+    tracking = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if(dx < 0) nextPage(); else prevPage();
+  }, {passive:true});
+})();
 
 function toArabicDigits(n){
   const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
