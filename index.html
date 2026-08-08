@@ -225,38 +225,45 @@
   .quran-back-btn{margin-bottom:12px;}
   .mushaf-frame{
     position:relative;
-    background:linear-gradient(170deg, #16332f, #0e2621);
-    border:2px solid var(--gold);
-    border-radius:4px;
-    padding:22px 16px 18px;
-    box-shadow:var(--shadow), inset 0 0 0 5px rgba(11,30,28,0.9), inset 0 0 0 6px rgba(201,162,39,0.35);
+    background:radial-gradient(circle at 25% 15%, #fbf3e0, #f2e4bf 140%);
+    border:3px solid #1d3f6e;
+    border-radius:6px;
+    padding:20px 16px 18px;
+    box-shadow:var(--shadow), inset 0 0 0 4px #d9b64a, inset 0 0 0 6px #1d3f6e, inset 0 0 0 9px #fbf3e0;
   }
   .mushaf-frame::before, .mushaf-frame::after,
   .mushaf-frame .corner-tl, .mushaf-frame .corner-tr, .mushaf-frame .corner-bl, .mushaf-frame .corner-br{
     content:''; position:absolute; width:14px; height:14px;
-    border:2px solid var(--gold); transform:rotate(45deg);
+    background:#d9b64a; border:2px solid #1d3f6e; transform:rotate(45deg);
   }
-  .mushaf-frame .corner-tl{top:-8px; right:-8px;}
-  .mushaf-frame .corner-tr{top:-8px; left:-8px;}
-  .mushaf-frame .corner-bl{bottom:-8px; right:-8px;}
-  .mushaf-frame .corner-br{bottom:-8px; left:-8px;}
+  .mushaf-frame .corner-tl{top:-9px; right:-9px;}
+  .mushaf-frame .corner-tr{top:-9px; left:-9px;}
+  .mushaf-frame .corner-bl{bottom:-9px; right:-9px;}
+  .mushaf-frame .corner-br{bottom:-9px; left:-9px;}
   .quran-verses{
-    font-family:'Amiri', serif; font-size:21px; line-height:2.05; text-align:justify; text-align-last:right; color:var(--cream);
+    font-family:'Amiri', serif; font-size:21px; line-height:2.05; text-align:justify; text-align-last:right; color:#2a2010;
     touch-action:pan-y;
   }
   .quran-verses .ayah-num{
     display:inline-flex; align-items:center; justify-content:center;
-    width:26px; height:26px; margin:0 3px; vertical-align:middle;
-    border:1.5px solid var(--gold); border-radius:50%;
-    color:var(--gold-soft); font-size:12px; font-family:'Tajawal'; font-weight:700;
+    width:25px; height:25px; margin:0 3px; vertical-align:middle;
+    border:1.4px solid #9b7a14; border-radius:50%;
+    background:radial-gradient(circle, #fdf6e3, #eeddaa);
+    color:#7a5c0c; font-size:11.5px; font-family:'Tajawal'; font-weight:700;
   }
   .page-surah-divider{
-    font-family:'Amiri', serif; font-size:19px; color:var(--gold-soft);
-    text-align:center; margin:18px 0 10px; padding:8px 14px;
-    border:1px solid var(--gold); border-radius:8px;
-    background:linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.15), rgba(201,162,39,0.05));
+    font-family:'Amiri', serif; font-size:20px; color:#f2d98a;
+    text-align:center; margin:0 0 16px; padding:10px 14px;
+    border:2px solid #d9b64a; border-radius:6px;
+    background:linear-gradient(90deg, #17356199, #2a4d7a, #17356199), linear-gradient(#1d3f6e,#1d3f6e);
+    position:relative;
   }
-  .page-surah-divider:first-child{margin-top:0;}
+  .page-surah-divider::before, .page-surah-divider::after{
+    content:'✦'; color:#d9b64a; font-size:13px; position:absolute; top:50%; transform:translateY(-50%);
+  }
+  .page-surah-divider::before{ right:14px; }
+  .page-surah-divider::after{ left:14px; }
+  .page-surah-divider:not(:first-child){margin-top:20px;}
   .swipe-hint{text-align:center; font-size:11px; color:var(--muted); margin-top:10px;}
   .page-nav{
     display:flex; align-items:center; justify-content:space-between;
